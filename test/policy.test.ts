@@ -9,6 +9,36 @@ describe('policy', it => {
     expect(policy.toString()).toBe('default-src https://example.com')
   })
 
+  it('removes sources', () => {
+    const policy = new Policy()
+      .add('script-src', 'none', 'self', 'https://example.com')
+    expect(policy.toString()).toBe("script-src 'none' 'self' https://example.com")
+
+    policy.remove('script-src', 'none')
+    expect(policy.toString()).toBe("script-src 'self' https://example.com")
+
+    policy.remove('script-src', 'https://example.com')
+    expect(policy.toString()).toBe("script-src 'self'")
+  })
+
+  it('removes directive', () => {
+    const policy = new Policy()
+      .add('script-src', 'none')
+    expect(policy.toString()).toBe("script-src 'none'")
+
+    policy.remove('script-src')
+    expect(policy.toString()).toBe("")
+  })
+
+  it('removes directive if no source', () => {
+    const policy = new Policy()
+      .add('script-src', 'none')
+    expect(policy.toString()).toBe("script-src 'none'")
+    policy.remove('script-src', 'none')
+    expect(policy.toString()).toBe("")
+  })
+
+
   it('multiple directives', () => {
     const policy = new Policy()
       .add('default-src', 'https://alice.com')

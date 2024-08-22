@@ -50,8 +50,11 @@ type SandboxValue = typeof sandboxValues[number]
 
 const shouldQuoteRegex = /^(none|self|unsafe-inline|unsafe-eval|strict-dynamic|unsafe-hashed|sha(256|384|512)-.+|nonce-.+)$/
 
-function shouldQuote(source: Source) {
-  return shouldQuoteRegex.test(source)
+function quoteIfNeeded(source: Source) {
+  if (source && shouldQuoteRegex.test(source)) {
+    return `'${source}'`
+  }
+  return source
 }
 
 export class Policy {
@@ -69,7 +72,26 @@ export class Policy {
 
     const sourceValues = this.srcDirectives.get(directive)!
     sources.forEach(source => {
-      sourceValues.add(shouldQuote(source) ? `'${source}'` : source)
+      const value = quoteIfNeeded(source)
+      if (value) {
+        sourceValues.add(value)
+      }
+
+    })
+    return this
+  }
+
+  remove(directive: SrcDirective, ...sources: Source[]) {
+    if (!this.srcDirectives.has(directive)) {
+      return this
+    }
+    if (sources.length === 0) {
+      this.srcDirectives.delete(directive)
+      return this
+    }
+    const sourceValues = this.srcDirectives.get(directive)!
+    sources.forEach(source => {
+      sourceValues.delete(quoteIfNeeded(source))
     })
     return this
   }
@@ -154,7 +176,11 @@ export class Policy {
   toString() {
     const srcDirectives = Array.from(this.srcDirectives.entries())
       .map(([directive, sources]) => {
-        return `${directive} ${Array.from(sources).join(' ')}`
+        const values = Array.from(sources)
+        if (values.length === 0) {
+          return ''
+        }
+        return `${directive} ${values.join(' ')}`
       })
 
     return [
