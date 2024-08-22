@@ -195,4 +195,16 @@ export class Policy {
   toHeader() {
     return ['Content-Security-Policy', this.toString()]
   }
+
+  printPretty() {
+    const output = this.toString()
+      .split('; ')
+      .map((directive) => {
+        const [name, ...values] = directive.split(' ')
+        return `${name}\n${values.map(v => `  ${v}`).join('\n')}`
+      })
+      .join('\n')
+
+    console.log(output)
+  }
 }
