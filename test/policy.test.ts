@@ -16,7 +16,7 @@ describe('policy', it => {
     expect(policy.toString()).toBe('default-src https://alice.com; script-src *')
   })
 
-  it('duplicate values', () => {
+  it('remove duplicated values', () => {
     const policy = new Policy()
       .add('default-src', 'self')
       .add('default-src', 'self', 'https:')
@@ -71,6 +71,10 @@ describe('policy', it => {
     const withNonce = policy.injectNonce()
 
     expect(withNonce('123')).toBe("script-src 'self' 'nonce-123'; style-src 'self' 'nonce-123'")
+
+
+    const withNonceScriptOnly = new Policy().injectNonce({ style: false })
+    expect(withNonceScriptOnly('abc')).toBe("script-src 'nonce-abc'")
   })
 
   it('reports uri and group', () => {

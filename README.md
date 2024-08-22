@@ -1,5 +1,7 @@
 # CSP Craft
 
+A simple way to build Content-Security-Policy.
+
 ## Installation
 
 ```sh
@@ -13,6 +15,13 @@ yarn add csp-craft
 ```sh
 pnpm add csp-craft
 ```
+
+## Features
+
+- [x] Merge multiple policies
+- [x] Automatically add single quotes for `'self'` and `'nonce-123'`, etc.
+- [x] Unique source values
+- [x] Prebuild for nonce
 
 ## Getting Started
 

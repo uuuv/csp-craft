@@ -96,9 +96,12 @@ export class Policy {
     return this
   }
 
-  injectNonce() {
-    this.add('script-src', 'nonce-<nonce>')
-    this.add('style-src', 'nonce-<nonce>')
+  injectNonce(options?: { script?: boolean, style?: boolean }) {
+    const opts = Object.assign({}, { script: true, style: true }, options)
+
+    opts.script && this.add('script-src', 'nonce-<nonce>')
+    opts.style && this.add('style-src', 'nonce-<nonce>')
+
     const str = this.toString()
 
     return (nonce: string) => {
