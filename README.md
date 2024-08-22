@@ -3,13 +3,14 @@
 ## Installation
 
 ```sh
-# npm
 npm install csp-craft
+```
 
-# yarn
+```sh
 yarn add csp-craft
+```
 
-# pnpm
+```sh
 pnpm add csp-craft
 ```
 
@@ -24,7 +25,8 @@ const policy = new Policy()
   .add('default-src', 'none')
   .add('script-src', 'self')
 
-policy.toString() // default-src 'none'; script-src: 'self'
+policy.toString()
+// default-src 'none'; script-src: 'self'
 ```
 
 ### Merge multiple policies
@@ -43,7 +45,8 @@ const mainPolicy = new Policy()
   .add('script-src', 'self')
   .merge(p1, p2)
 
-mainPolicy.toString() // default-src 'none'; script-src: 'self' https://p1.com https://p2.com
+mainPolicy.toString()
+// default-src 'none'; script-src: 'self' https://p1.com https://p2.com
 ```
 
 ### Built-in policies
@@ -62,8 +65,9 @@ import { Policy } from 'csp-craft'
 const p1 = new Policy()
   .add('script-src', 'https://p1.com')
 
-const toStringwithNonce = p1.injectNonce()
+const cspWithNonce = p1.injectNonce()
 
-toStringwithNonce('123') // script-src https://p1.com 'nonce-123'
+cspWithNonce('123')
+// script-src https://p1.com 'nonce-123'
 ```
 
